@@ -1,0 +1,6 @@
+{
+  "aws_cognito_region": "eu-west-2",
+  "aws_user_pools_id": "eu-west-2_UR6G5Ov16",
+  "aws_user_pools_web_client_id": "m9d0bu5gm6t44vnb3l0lif6eu",
+  "aws_mandatory_sign_in": "enable"
+}

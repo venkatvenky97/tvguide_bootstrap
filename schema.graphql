@@ -1,0 +1,181 @@
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+enum Gender {
+  M
+  F
+}
+
+type Query {
+  sum(input: SumInput!): Sum!
+  usernameExists(input: UsernameExistsInput!): Boolean!
+  platforms: [Platform!]!
+  regions(input: RegionsInput!): [Region!]!
+  channelsByRegion(input: ChannelsByRegionInput!): [Channel!]!
+  channels: [Channel!]!
+  user: User!
+  newOnTV(input: NewOnTVInput!): NewOnTV!
+  newFilms(input: NewFilmsInput!): NewFilms!
+}
+
+type Mutation {
+  signUpWithEmail(input: SignUpWithEmailInput!): User!
+  updateProfile(input: UpdateProfileInput!): User!
+  updateUserChannels(input: UpdateUserChannelsInput!): [Channel!]!
+}
+
+input SumInput {
+  x: Int!
+  y: Int!
+}
+
+type Sum {
+  x: Int!
+  y: Int!
+  sum: Int!
+}
+
+input SignUpWithEmailInput {
+  email: String!
+}
+
+type User {
+  id: String!
+  email: String!
+  profileCreated: Boolean!
+  username: String
+  platformId: String
+  regionId: String
+}
+
+input UsernameExistsInput {
+  username: String!
+}
+
+type Platform {
+  id: String!
+  title: String!
+}
+
+input RegionsInput {
+  platformId: String!
+}
+
+type Region {
+  id: String!
+  title: String!
+}
+
+input UpdateProfileInput {
+  username: String!
+  birthDate: Date!
+  gender: Gender!
+  platformId: String!
+  regionId: String!
+  netflix: Boolean!
+  amazon: Boolean!
+}
+
+input ChannelsByRegionInput {
+  platformId: String!
+  regionId: String!
+  searchText: String
+}
+
+type Channel {
+  id: String!
+  title: String!
+  logoURL: String
+  number: Int
+}
+
+input UpdateUserChannelsInput {
+  platformId: String!
+  regionId: String!
+  channelIds: [String!]!
+}
+
+type Schedule {
+  id: String!
+  channelId: String!
+  assetId: String!
+  title: String!
+  startAt: DateTime!
+  endAt: DateTime!
+  certification: JSON!
+  meta: JSON!
+  attributes: [String!]!
+  summaryShort: String
+  summaryMedium: String
+  summaryLong: String
+  channel: Channel!
+  asset: Asset!
+}
+
+type Asset {
+  id: String!
+  seriesId: String
+  seasonId: String
+  type: String!
+  certification: JSON!
+  meta: JSON!
+  categories: [String!]!
+  attributes: [String!]!
+  imageURL: String
+  title: String
+  number: Int
+  total: Int
+  productionYear: Int
+  runtime: Int
+  series: Series
+  season: Season
+}
+
+type Series {
+  id: String!
+  title: String!
+  imageURL: String
+  number: Int
+}
+
+type Season {
+  id: String!
+  title: String!
+  imageURL: String
+  number: Int
+}
+
+input PaginationInput {
+  skip: Int!
+  take: Int!
+}
+
+input NewOnTVInput {
+  pagination: PaginationInput!
+}
+
+type NewOnTV {
+  count: Int!
+  schedules: [Schedule!]!
+}
+
+input NewFilmsInput {
+  pagination: PaginationInput!
+}
+
+type NewFilms {
+  count: Int!
+  schedules: [Schedule!]!
+}

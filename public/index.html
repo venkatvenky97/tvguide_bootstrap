@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/tvStyle.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script> -->
+
+    <title>TVGuide - New on TV</title>
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="js/moment.js"></script>
+  <script src="js/slick.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.8/lib/draggable.bundle.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"
+    integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U="
+    crossorigin="anonymous"
+  ></script>
+  <script src="js/jquery.inputmask.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.5/js/bootstrap-select.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      initSettingsModal();
+      setTime();
+      animateHeaderBg();
+      initHomeGrid();
+      initHomeGridPopover();
+      initSidenav();
+      initSettingsPopup();
+
+      $(window).on("resize", setTime);
+      $(window).on("scroll", animateHeaderBg);
+
+      $("#sign-in-modal .sign-up-link").on("click", function () {
+        $("#sign-up-modal .c-select select").selectpicker();
+        $("#sign-in-modal").modal("hide");
+        setTimeout(function () {
+          $("#sign-up-modal").modal({
+            backdrop: "static",
+          });
+        }, 500);
+      });
+
+      $("#sign-up-modal .login-in-link").on("click", function () {
+        $("#sign-up-modal").modal("hide");
+        setTimeout(function () {
+          $("#sign-in-modal").modal({
+            backdrop: "static",
+          });
+        }, 500);
+      });
+
+      $(document).ready(function () {
+        $("#sign-up-modal .birthdate .day").inputmask({
+          regex: "^(3[01]|[12][0-9]|0?[1-9])$",
+          placeholder: "dd",
+        });
+        $("#sign-up-modal .birthdate .month").inputmask({
+          regex: "^(1[012]|0?[1-9])$",
+          placeholder: "mm",
+        });
+        $("#sign-up-modal .birthdate .year").inputmask("9999", {
+          placeholder: "yyyy",
+        });
+      });
+    });
+
+    function initHomeGrid() {
+      $(".time-bar-js").slick({
+        dots: false,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 8,
+        draggable: false,
+        touchMove: false,
+        centerMode: false,
+        variableWidth: true,
+      });
+
+      $(".time-bar-js").on(
+        "beforeChange",
+        function (event, slick, currentSlide, nextSlide) {
+          let width;
+
+          if ($(window).width() > 575) {
+            width = nextSlide * 216;
+          } else {
+            width = nextSlide * 130;
+          }
+
+          $("#grid #grid-js").css("transform", `translateX(-${width}px)`);
+        }
+      );
+
+      updateLinePos();
+
+      setInterval(function () {
+        updateLinePos();
+      }, 1000 * 60);
+
+      function updateLinePos() {
+        const date = moment();
+        const hours = date.hour();
+        const minutes = date.minutes();
+        const slideWidth = $(".time-bar-js .slick-slide").width() + 16;
+        const percents = Number((minutes / 60).toFixed(2));
+        const total = slideWidth * hours * 2 + slideWidth * 2 * percents;
+
+        $(".time-line").css("left", `${total}px`);
+      }
+    }
+
+    function animateHeaderBg() {
+      const bg = $("#main-header .active-episode-js .bg-layer");
+      if ($(window).width() > 1200) {
+        const scrolled = $(window).scrollTop();
+        bg.css("background-position-y", -(scrolled * 0.2) + "px");
+      } else {
+        bg.removeAttr("style");
+      }
+    }
+
+    function setTime() {
+      const width = $(window).width();
+      if (width > 1200) {
+        $("#grid-menu .date-js").text(moment().format("dddd, D MMMM"));
+      } else {
+        $("#grid-menu .date-js").text(moment().format("ddd D MMM"));
+      }
+    }
+
+    function initSettingsModal() {
+      const containerSelector = "#channels";
+      const containers = document.querySelectorAll(containerSelector);
+
+      if (containers.length === 0) {
+        return false;
+      }
+
+      const sortable = new Draggable.Sortable(containers, {
+        draggable: ".alert",
+        mirror: {
+          appendTo: "body",
+          constrainDimensions: true,
+        },
+      });
+
+      sortable.on("drag:start", (e) => {
+        const target = e.sensorEvent.data.target;
+        if (
+          $(target).hasClass("drag-area") ||
+          $(target).parent().hasClass("drag-area")
+        ) {
+          return;
+        }
+        e.cancel();
+      });
+    }
+
+    function initHomeGridPopover() {
+      const cardsList = $("#grid-js .grid-item");
+
+      cardsList.popover({
+        trigger: "manual",
+        placement: "auto",
+        fallbackPlacement: "flip",
+        html: true,
+        content: `
+                <div class="d-flex">
+                    <div class="c-card-content">
+                        <div>
+                            <span class="genre badge badge-info badge-pill">game show</span>
+                            <span class="cert ml-2">R18</span>
+                        </div>
+                        <h4 class="title mb-2">Lord of The Rings: The Fellowship of The Ring</h4>
+                        <div class="mb-2 meta-data">
+                            <strong class="year mr-4">2001</strong>
+                            <strong class="mr-4 d-inline-flex align-items-center up">Rating 6.7</strong>
+                            <strong class="d-inline-flex align-items-center down">Popularity 67893</strong>
+                        </div>
+                        <p class="descr mb-2">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
+                        <div class="duration"><strong>Starts 8:30pm</strong>, duration 1h 30min, ends 10:00pm</div>
+                    </div>
+                    <aside class="d-flex justify-content-between flex-column pl-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="icon-close"></span>
+                        </div>
+                        <div class="d-flex flex-column buttons">
+                            <a class="mb-2">
+                                <span class="icon-bell"></span>
+                            </a>
+                            <a class="mb-2">
+                                <span class="icon-thumbs-up"></span>
+                            </a>
+                            <a>
+                                <span class="icon-thumbs-down"></span>
+                            </a>
+                        </div>
+                    </aside>
+                </div>
+            `,
+        template: `
+                <div class="popover home-grid" role="tooltip">
+                    <div class="arrow"></div>
+                    <h3 class="popover-header"></h3>
+                    <div class="popover-body text-white"></div>
+                </div>
+            `,
+      });
+
+      cardsList.on("inserted.bs.popover", function () {
+        const source = $(this);
+        const id = "#" + $(this).attr("aria-describedby");
+        const popover = $(id);
+        popover.find(".icon-close").on("click", function () {
+          source.popover("hide");
+        });
+      });
+
+      cardsList.on("click", function () {
+        cardsList.each(function () {
+          $(this).popover("hide");
+        });
+        $(this).popover("show");
+      });
+    }
+
+    function initSidenav() {
+      $("#dismiss, #sidenav-overlay, #sidebar .content ul a").on(
+        "click",
+        function () {
+          $("#sidebar").removeClass("active");
+          $("#sidenav-overlay").removeClass("active");
+          $("body").removeAttr("style");
+        }
+      );
+
+      $("#sidebarCollapse").on("click", function (e) {
+        e.preventDefault();
+        $("#sidebar").addClass("active");
+        $("body").css("overflow", "hidden");
+        // fade in the overlay
+        $("#sidenav-overlay").addClass("active");
+        $(".collapse.in").toggleClass("in");
+        $("a[aria-expanded=true]").attr("aria-expanded", "false");
+      });
+    }
+
+    function initSettingsPopup() {
+      $("#settings-modal .c-select select").selectpicker();
+
+      $("#channels-search-js").on("keyup", function () {
+        const value = $(this).val();
+        $("#settings-modal .add-channel .text")
+          .unmark({
+            done: function (count) {
+              const listItems = $("#settings-modal .add-channel li");
+              listItems.removeClass("d-none");
+              if (value.length > 0) {
+                listItems.removeClass("d-flex").addClass("d-none");
+              } else {
+                listItems.removeClass("d-none").addClass("d-flex");
+              }
+            },
+          })
+          .mark(this.value, {
+            done: function () {
+              $("#settings-modal .add-channel li .mark-js").each(function () {
+                $(this).closest("li").addClass("d-flex");
+              });
+              $("#settings-modal .add-channel li").each(function () {
+                if (!$(this).hasClass("d-flex")) {
+                  $(this).addClass("d-none");
+                }
+              });
+            },
+            className: "mark-js",
+          });
+      });
+    }
+  </script>
+</html>
